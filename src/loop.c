@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 13:57:29 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/08 16:39:22 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/09 05:35:31 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	update_wvp(t_app *app)
 	test = vec4_trans(&view, test);
 	test = vec4_trans(&proj, test);
 	//view = mat_identity();
-	proj = mat_identity();
+	//proj = mat_identity();
 	mat = glGetUniformLocation(app->shader_prog, "world");
 	glUniformMatrix4fv(mat, 1, GL_FALSE, &world.v[0]);
 	mat = glGetUniformLocation(app->shader_prog, "view");

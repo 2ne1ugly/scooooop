@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 12:36:46 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/08 16:19:51 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/09 05:37:50 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ t_mat	mat_look_at(t_vec4 eye, float pitch, float yaw)
 	x_axis = (t_vec4){cos(yaw), 0, -sin(yaw), 0};
 	y_axis = (t_vec4){sin(yaw) * sin(pitch),
 		cos(pitch), cos(yaw) * sin(pitch), 0};
-	z_axis = (t_vec4){sin(yaw) * cos(pitch),
-		-sin(pitch), cos(pitch) * cos(yaw), 0};
+	z_axis = (t_vec4){-sin(yaw) * cos(pitch),
+		+ sin(pitch), -cos(pitch) * cos(yaw), 0};
 	result = mat_identity();
 	result.v[0] = x_axis.x;
 	result.v[1] = y_axis.x;
@@ -37,7 +37,7 @@ t_mat	mat_look_at(t_vec4 eye, float pitch, float yaw)
 	result.v[12] = -vec4_dot(x_axis, eye);
 	result.v[13] = -vec4_dot(y_axis, eye);
 	result.v[14] = -vec4_dot(z_axis, eye);
-	result.v[15] = 0;
+	result.v[15] = 1;
 	return (result);
 }
 
@@ -96,6 +96,7 @@ t_mat	mat_proj(t_cam *cam)
 	float	z_range;
 
 	z_range = cam->far - cam->near;
+	z_range *= -1;
 	mat = mat_identity();
 	mat.v[0] = 1.0f / (cam->c * cam->aspect);
 	mat.v[5] = 1.0f / cam->c;
@@ -103,5 +104,12 @@ t_mat	mat_proj(t_cam *cam)
 	mat.v[11] = -1.0f;
 	mat.v[14] = -(2 * cam->far * cam->near) / (z_range);
 	mat.v[15] = 0;
+	//ortho
+	/*
+	mat.v[0] = 2.0f / 5;
+	mat.v[5] = 2.0f / 5;
+	mat.v[10] = 2.0f / z_range;
+	mat.v[14] = (cam->far + cam->near) / z_range;
+	*/
 	return (mat);
 }
