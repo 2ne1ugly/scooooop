@@ -1,6 +1,6 @@
 CC=clang
-CFLAGS=-Werror -Wextra -Wall -g -I. -Imlx -Iincludes
-LFLAGS=-L mlx/ -lmlx -L lib/ -framework OpenGL -framework AppKit
+CFLAGS=-Werror -Wextra -Wall -g -Ilibft -I. -Imlx -Iincludes
+LFLAGS=-L libft/ -lft -L mlx/ -lmlx -L lib/ -framework OpenGL -framework AppKit
 GLEW=lib/libGLEW.a lib/libGLEW.2.1.0.dylib
 SRC=$(wildcard src/*)
 NAME=scop
@@ -9,10 +9,11 @@ SHELL := /bin/bash
 
 .PHONY: clean fclean all re norm norme debug test norman update libft
 
-VPATH = src obj include
+VPATH = src obj libft/includes include
 
 $(NAME): $(OBJ)
 	@make -C mlx
+	@make -C libft
 	@$(CC) -o $(NAME) obj/* $(GLEW) $(LFLAGS)
 	@echo "$(NAME) build complete!"
 
@@ -24,9 +25,11 @@ all: $(NAME)
 
 clean:
 	@make -C mlx clean
+	@make -C libft/ clean
 	@rm -rf obj/
 
 fclean: clean
+	@make -C libft/ fclean
 	@rm -f $(NAME)
 
 re: fclean all

@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 13:35:06 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/09 17:28:45 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/10 13:39:05 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <libft.h>
 
 #define PI 3.14159265359
 
@@ -52,8 +53,20 @@ typedef struct	s_obj
 	int		vertex_count;
 	GLuint	*indices;
 	int		index_count;
+	t_vec4	*vertex_textures;
+
+
 	t_mat	world_view_proj;
 }				t_obj;
+
+typedef struct	s_obj_file
+{
+	char	*data;
+	t_vec4	*vertices;
+	int		vertex_count;
+	GLuint	**faces;
+	int		face_count;
+}				t_obj_file;
 
 typedef struct	s_app
 {
@@ -102,3 +115,5 @@ GLuint		link_vs_ps(GLuint vs, GLuint ps);
 t_mat		mat_mul(t_mat *lhs, t_mat *rhs);
 
 char		*read_file(char *path);
+void		fatal_error(char *msg);
+void		parse_obj(t_obj_file *obj_file);

@@ -6,11 +6,17 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/05 22:37:54 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/09 17:42:23 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/10 13:40:16 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
+
+void	fatal_error(char *msg)
+{
+	printf("%s\n", msg);
+	exit(0);
+}
 
 int	main(int argc, char **argv)
 {

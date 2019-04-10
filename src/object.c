@@ -6,12 +6,12 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 15:02:06 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/09 17:42:03 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/10 13:39:11 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
-
+/*
 int		count_elem(char **pos, char c)
 {
 	int count;
@@ -81,6 +81,7 @@ int		write_index(char **pos, GLuint *ind_buff)
 		(*pos)++;
 	return (1);
 }
+*/
 
 void	init_buffers(t_app *app, t_obj *obj)
 {
@@ -102,21 +103,18 @@ void	init_buffers(t_app *app, t_obj *obj)
 
 void	init_object(t_app *app, char *object)
 {
-	t_obj	*obj;
-	char	*data;
-	char	*prev_data;
-	char	*next_data;
+	t_obj		*obj;
+	t_obj_file	obj_file;
 
 	obj = &app->obj;
-	data = read_file(object);
-	next_data = data;
-	prev_data = data;
-	obj->vertex_count = count_elem(&next_data, 'v');
-	obj->vertices = malloc(sizeof(t_vec4) * obj->vertex_count);
-	write_vertex(&prev_data, obj->vertices);
-	obj->index_count = 3 * count_elem(&next_data, 'f');
-	obj->indices = malloc(sizeof(GLuint) * obj->index_count);
-	write_index(&prev_data, obj->indices);
+	obj_file.data = read_file(object);
+	parse_obj(&obj_file);
+//	obj->vertex_count = count_elem(&next_data, 'v');
+//	obj->vertices = malloc(sizeof(t_vec4) * obj->vertex_count);
+//	write_vertex(&prev_data, obj->vertices);
+//	obj->index_count = 3 * count_elem(&next_data, 'f');
+//	obj->indices = malloc(sizeof(GLuint) * obj->index_count);
+//	write_index(&prev_data, obj->indices);
 	init_buffers(app, obj);
 	obj->ypr = (t_vec4){0.0f, 0.0f, 0.0f, 1.0f};
 	obj->pos = (t_vec4){0.0f, 0.0f, 0.0f, 1.0f};
