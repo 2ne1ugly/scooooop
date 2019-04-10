@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 13:35:06 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/09 05:34:34 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/09 17:28:45 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 
 #define PI 3.14159265359
@@ -74,7 +75,7 @@ typedef struct	s_app
 t_app		*init_app(void);
 void		init_wnd(t_app *app, int width, int height, char *title);
 void		init_glew(void);
-void		init_object(t_app *app);
+void		init_object(t_app *app, char *object);
 int			app_loop(void *param);
 
 int			key_press(int keycode, void *param);
@@ -99,3 +100,5 @@ t_mat		mat_ypr(t_vec4 *ypr);
 GLuint		load_shader(char *path, int type);
 GLuint		link_vs_ps(GLuint vs, GLuint ps);
 t_mat		mat_mul(t_mat *lhs, t_mat *rhs);
+
+char		*read_file(char *path);

@@ -6,66 +6,84 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 15:02:06 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/08 16:38:58 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/09 17:42:03 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 
-void	init_object(t_app *app)
+int		count_elem(char **pos, char c)
 {
-	t_obj *obj;
+	int count;
 
-	obj = &app->obj;
-	obj->vertex_count = 8;
-	obj->vertices = malloc(sizeof(t_vec4) * obj->vertex_count);
-	obj->vertices[0] = (t_vec4){-0.5f, -0.5f, 0.5f, 1.0f};
-	obj->vertices[1] = (t_vec4){0.5f, -0.5f, 0.5f, 1.0f};
-	obj->vertices[2] = (t_vec4){-0.5f, 0.5f, 0.5f, 1.0f};
-	obj->vertices[3] = (t_vec4){0.5f, 0.5f, 0.5f, 1.0f};
-	obj->vertices[4] = (t_vec4){-0.5f, 0.5f, -0.5f, 1.0f};
-	obj->vertices[5] = (t_vec4){0.5f, 0.5f, -0.5f, 1.0f};
-	obj->vertices[6] = (t_vec4){-0.5f, -0.5f, -0.5f, 1.0f};
-	obj->vertices[7] = (t_vec4){0.5f, -0.5f, -0.5f, 1.0f};
+	count = 0;
+	while (**pos == '#' || **pos == c)
+	{
+		if (**pos != '#')
+			count++;
+		while (**pos != '\n' && **pos != '\0')
+			(*pos)++;
+		if (**pos == '\n')
+			(*pos)++;
+	}
+	while (**pos == '\n')
+		(*pos)++;
+	return (count);
+}
 
-	obj->index_count = 36;
-	obj->indices = malloc(sizeof(GLuint) * obj->index_count);
-	obj->indices[0] = 0;
-	obj->indices[1] = 1;
-	obj->indices[2] = 2;
-	obj->indices[3] = 2;
-	obj->indices[4] = 1;
-	obj->indices[5] = 3;
-	obj->indices[6] = 2;
-	obj->indices[7] = 3;
-	obj->indices[8] = 4;
-	obj->indices[9] = 4;
-	obj->indices[10] = 3;
-	obj->indices[11] = 5;
-	obj->indices[12] = 6;
-	obj->indices[13] = 7;
-	obj->indices[14] = 0;
-	obj->indices[15] = 0;
-	obj->indices[16] = 7;
-	obj->indices[17] = 3;
-	obj->indices[18] = 6;
-	obj->indices[19] = 7;
-	obj->indices[20] = 0;
-	obj->indices[21] = 0;
-	obj->indices[22] = 7;
-	obj->indices[23] = 3;
-	obj->indices[24] = 1;
-	obj->indices[25] = 7;
-	obj->indices[26] = 3;
-	obj->indices[27] = 3;
-	obj->indices[28] = 7;
-	obj->indices[29] = 5;
-	obj->indices[30] = 6;
-	obj->indices[31] = 0;
-	obj->indices[32] = 4;
-	obj->indices[33] = 4;
-	obj->indices[34] = 0;
-	obj->indices[35] = 2;
+int		write_vertex(char **pos, t_vec4 *vec_buff)
+{
+	int i;
+
+	i = 0;
+	while (**pos == '#' || **pos == 'v')
+	{
+		if (**pos != '#')
+		{
+			strtok(*pos, " \n");
+			vec_buff[i].x = atof(strtok(NULL, " \n"));
+			vec_buff[i].y = atof(strtok(NULL, " \n"));
+			vec_buff[i].z = atof(strtok(NULL, " \n"));
+			vec_buff[i].w = 1;
+			i++;
+		}
+		while (**pos != '\n' && **pos != '\0')
+			(*pos)++;
+		if (**pos == '\n')
+			(*pos)++;
+	}
+	while (**pos == '\n')
+		(*pos)++;
+	return (1);
+}
+
+int		write_index(char **pos, GLuint *ind_buff)
+{
+	int i;
+
+	i = 0;
+	while (**pos == '#' || **pos == 'f')
+	{
+		if (**pos != '#')
+		{
+			strtok(*pos, " \n");
+			ind_buff[i] = atoi(strtok(NULL, " \n"));
+			ind_buff[i + 1] = atoi(strtok(NULL, " \n"));
+			ind_buff[i + 2] = atoi(strtok(NULL, " \n"));
+			i += 3;
+		}
+		while (**pos != '\n' && **pos != '\0')
+			(*pos)++;
+		if (**pos == '\n')
+			(*pos)++;
+	}
+	while (**pos == '\n')
+		(*pos)++;
+	return (1);
+}
+
+void	init_buffers(t_app *app, t_obj *obj)
+{
 	app->ind_buff = 0;
 	glGenBuffers(1, &app->ind_buff);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, app->ind_buff);
@@ -80,6 +98,26 @@ void	init_object(t_app *app)
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, app->vbo);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+}
+
+void	init_object(t_app *app, char *object)
+{
+	t_obj	*obj;
+	char	*data;
+	char	*prev_data;
+	char	*next_data;
+
+	obj = &app->obj;
+	data = read_file(object);
+	next_data = data;
+	prev_data = data;
+	obj->vertex_count = count_elem(&next_data, 'v');
+	obj->vertices = malloc(sizeof(t_vec4) * obj->vertex_count);
+	write_vertex(&prev_data, obj->vertices);
+	obj->index_count = 3 * count_elem(&next_data, 'f');
+	obj->indices = malloc(sizeof(GLuint) * obj->index_count);
+	write_index(&prev_data, obj->indices);
+	init_buffers(app, obj);
 	obj->ypr = (t_vec4){0.0f, 0.0f, 0.0f, 1.0f};
 	obj->pos = (t_vec4){0.0f, 0.0f, 0.0f, 1.0f};
 }
