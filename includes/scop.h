@@ -83,7 +83,8 @@ typedef struct	s_obj_file
 	int		par_vertex_count;
 	t_poly	*polies;
 	int		poly_count;
-
+	t_line	*lines;
+	int		line_count;
 }				t_obj_file;
 
 typedef struct	s_app
@@ -136,8 +137,9 @@ char		*read_file(char *path);
 void		fatal_error(char *msg);
 void		parse_obj(t_obj_file *obj_file);
 
-void	parse_vertex_line(t_vec4 *vec, char **tokens);
-void	parse_tex_line(t_vec4 *tex, char **tokens);
-void	parse_normal_line(t_vec4 *norm, char **tokens);
-void	parse_par_vert_line(t_vec4 **norm, char **tokens);
-void	parse_face_line(t_poly *poly, char **tokens);
+void		parse_vertex_line(t_vec4 *vec, char **tokens);
+void		parse_tex_line(t_vec4 *tex, char **tokens);
+void		parse_normal_line(t_vec4 *norm, char **tokens);
+void		parse_par_vert_line(t_vec4 **norm, char **tokens);
+void		parse_face_line(t_poly *poly, char **tokens);
+void		parse_line_line(t_line *line, char **tokens);

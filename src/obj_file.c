@@ -12,7 +12,7 @@
 
 #include "scop.h"
 
-void	setup_obj_space(t_obj_file *obj_file, char **lines)
+void	count_obj_data(t_obj_file *obj_file, char **lines)
 {
 	int i;
 
@@ -21,6 +21,7 @@ void	setup_obj_space(t_obj_file *obj_file, char **lines)
 	obj_file->normal_count = 0;
 	obj_file->par_vertex_count =0;
 	obj_file->poly_count = 0;
+	obj_file->line_count = 0;
 	i = -1;
 	while (lines[++i] != NULL)
 		if (lines[i][0] == 'v')
@@ -33,19 +34,26 @@ void	setup_obj_space(t_obj_file *obj_file, char **lines)
 			obj_file->par_vertex_count++;
 		else if (lines[i][0] == 'f')
 			obj_file->poly_count++;
+		else if (lines[i][0] == 'l')
+			obj_file->line_count++;
+}
+
+void	malloc_obj_data(t_obj_file *obj_file)
+{
 	obj_file->vertices = malloc(sizeof(obj_file->vertex_count));
 	obj_file->tex_coords = malloc(sizeof(obj_file->tex_coord_count));
 	obj_file->normals = malloc(sizeof(obj_file->normal_count));
 	obj_file->par_vertices = malloc(sizeof(obj_file->par_vertex_count));
 	obj_file->polies = malloc(sizeof(obj_file->poly_count));
+	obj_file->lines = malloc(sizeof(obj_file->line_count));
 }
 
 void	insert_data(t_obj_file *obj_file, char **lines)
 {
-	int i[6];
+	int i[7];
 	char **tokens;
 
-	memset(i, 0, sizeof(int) * 6);
+	memset(i, 0, sizeof(int) * 7);
 	while (lines[i[0]] != NULL)
 	{
 		tokens = ft_strsplit(lines[i[0]], ' ');
@@ -59,6 +67,8 @@ void	insert_data(t_obj_file *obj_file, char **lines)
 			parse_param_line(&obj_file->par_vertices[i[4]++], tokens);
 		else if (lines[i[0]][0] == 'f')
 			parse_face_line(&obj_file->polies[i[5]++], tokens);
+		else if (lines[i[0]][0] == 'l')
+			parse_line_line(&obj_file->lines[i[6]++], tokens);
 		free_tab(tokens);
 		i[0]++;
 	}
@@ -69,6 +79,7 @@ void	parse_obj(t_obj_file *obj_file)
 	char **lines;
 
 	lines = ft_strsplit(obj_file->data, '\n');
-	setup_obj_space(obj_file, lines);
+	setup_obj_data(obj_file, lines);
+	malloc_obj_data(obj_file);
 	free_tab(lines);
 }

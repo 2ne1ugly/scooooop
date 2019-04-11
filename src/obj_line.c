@@ -92,6 +92,8 @@ void	parse_line_line(t_line *line, char **tokens)
 	int	i;
 
 	line->vertex_count = array_len(tokens);
+	if (line->vertex_count < 2)
+		fatal_error("the line consists only one line");
 	line->vertex = malloc(sizeof(GLuint) * (line->vertex_count));
 	i = 0;
 	while (i < line->vertex_count)
