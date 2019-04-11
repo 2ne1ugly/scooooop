@@ -58,7 +58,7 @@ void	parse_normal_line(t_vec4 *norm, char **tokens)
 	norm->z = atof(tokens[2]);	
 }
 
-void	parse_face_line(t_poly *poly, char **tokens)
+void	parse_face_line(t_poly *poly, char **tokens, t_mtl *mtl)
 {
 	int	i;
 	char **tabs;
@@ -85,9 +85,10 @@ void	parse_face_line(t_poly *poly, char **tokens)
 		free_tab(tabs);
 		i++;
 	}
+	poly->material = mtl;
 }
 
-void	parse_line_line(t_line *line, char **tokens)
+void	parse_line_line(t_line *line, char **tokens, t_mtl *mtl)
 {
 	int	i;
 
@@ -101,4 +102,5 @@ void	parse_line_line(t_line *line, char **tokens)
 		line->vertex[i] = atoi(tokens[i]);
 		i++;
 	}
+	line->material = mtl;
 }

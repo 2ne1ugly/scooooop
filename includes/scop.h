@@ -47,16 +47,18 @@ typedef struct	s_cam
 
 typedef struct	s_line
 {
-	int vertex_count;
-	GLuint	*vertex;
+	int			vertex_count;
+	int			*vertex;
+	t_mtl		*material;
 }				t_line;
 
 typedef struct	s_poly
 {
-	int vertex_count;
-	GLuint	*vertex;
-	GLuint	*tex_coord;
-	GLuint	*normal;
+	int		vertex_count;
+	int		*vertex;
+	int		*tex_coord;
+	int		*normal;
+	t_mtl	*material;
 }				t_poly;
 
 typedef struct	s_obj
@@ -70,21 +72,34 @@ typedef struct	s_obj
 	t_mat	world_view_proj;
 }				t_obj;
 
-typedef struct	s_obj_file
+typedef struct	s_mtl
+{
+
+}				t_mtl;
+
+typedef struct	s_mtl_file
 {
 	char	*data;
-	t_vec4	*vertices;
-	int		vertex_count;
-	t_vec4	*tex_coords;
-	int		tex_coord_count;
-	t_vec4	*normals;
-	int		normal_count;
-	t_vec4	*par_vertices;
-	int		par_vertex_count;
-	t_poly	*polies;
-	int		poly_count;
-	t_line	*lines;
-	int		line_count;
+}				t_mtl_file;
+
+typedef struct	s_obj_file
+{
+	char		*data;
+	t_vec4		*vertices;
+	int			vertex_count;
+	t_vec4		*tex_coords;
+	int			tex_coord_count;
+	t_vec4		*normals;
+	int			normal_count;
+	t_vec4		*par_vertices;
+	int			par_vertex_count;
+	t_poly		*polies;
+	int			poly_count;
+	t_line		*lines;
+	int			line_count;
+	t_mtl_file	*mtl_files;
+	int			mtl_file_count;
+	t_mtl		*curr_mtl;
 }				t_obj_file;
 
 typedef struct	s_app
@@ -141,5 +156,5 @@ void		parse_vertex_line(t_vec4 *vec, char **tokens);
 void		parse_tex_line(t_vec4 *tex, char **tokens);
 void		parse_normal_line(t_vec4 *norm, char **tokens);
 void		parse_par_vert_line(t_vec4 **norm, char **tokens);
-void		parse_face_line(t_poly *poly, char **tokens);
-void		parse_line_line(t_line *line, char **tokens);
+void		parse_face_line(t_poly *poly, char **tokens, t_mtl *mtl);
+void		parse_line_line(t_line *line, char **tokens, t_mtl *mtl);
