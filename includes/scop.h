@@ -19,6 +19,7 @@
 #include <string.h>
 #include <math.h>
 #include <libft.h>
+#include <ctype.h>
 
 #define PI 3.14159265359
 
@@ -74,17 +75,27 @@ typedef struct	s_obj
 
 typedef struct	s_mtl
 {
-
+	char	*name;
+	t_vec4	ambient;
+	t_vec4	diffuse;
+	t_vec4	specular;
+	float	spec_exp;
+	float	opacity;
+	int		illum_model;
 }				t_mtl;
 
 typedef struct	s_mtl_file
 {
 	char	*data;
+	char	*path;
+	t_mtl	*mtls;
+	int		mtl_count;
 }				t_mtl_file;
 
 typedef struct	s_obj_file
 {
 	char		*data;
+	char		*path;
 	t_vec4		*vertices;
 	int			vertex_count;
 	t_vec4		*tex_coords;
@@ -152,9 +163,14 @@ char		*read_file(char *path);
 void		fatal_error(char *msg);
 void		parse_obj(t_obj_file *obj_file);
 
+void		add_mtl(t_mtl_file *mtl, char *line, char *curr_path);
+void		apply_mtl(t_obj_file *obj, char **tokens);
+
 void		parse_vertex_line(t_vec4 *vec, char **tokens);
 void		parse_tex_line(t_vec4 *tex, char **tokens);
 void		parse_normal_line(t_vec4 *norm, char **tokens);
 void		parse_par_vert_line(t_vec4 **norm, char **tokens);
 void		parse_face_line(t_poly *poly, char **tokens, t_mtl *mtl);
 void		parse_line_line(t_line *line, char **tokens, t_mtl *mtl);
+
+void		parse_3val_line(t_vec4 *val, char **tokens);

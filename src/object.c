@@ -108,6 +108,7 @@ void	init_object(t_app *app, char *object)
 
 	obj = &app->obj;
 	obj_file.data = read_file(object);
+	obj_file.path = object;
 	parse_obj(&obj_file);
 //	obj->vertex_count = count_elem(&next_data, 'v');
 //	obj->vertices = malloc(sizeof(t_vec4) * obj->vertex_count);

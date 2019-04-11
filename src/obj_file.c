@@ -85,7 +85,7 @@ void	insert_data(t_obj_file *obj, char **lines)
 		else if (strcmp(tokens[0], "l") == 0)
 			parse_line_line(&obj->lines[i[6]++], &tokens[1], obj->curr_mtl);
 		else if (strcmp(tokens[0], "mtllib") == 0)
-			add_mtl(obj->mtl_files[i[7]++], &tokens[1]);
+			add_mtl(obj->mtl_files[i[7]++], &lines[i[0]], obj->path);
 		else if (strcmp(tokens[0], "usemtl") == 0)
 			apply_mtl(obj, &tokens[1]);
 		free_tab(tokens);

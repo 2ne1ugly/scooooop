@@ -55,7 +55,7 @@ void	parse_normal_line(t_vec4 *norm, char **tokens)
 		fatal_error("normal do not contain 3 values");
 	norm->x = atof(tokens[0]);
 	norm->y = atof(tokens[1]);
-	norm->z = atof(tokens[2]);	
+	norm->z = atof(tokens[2]);
 }
 
 void	parse_face_line(t_poly *poly, char **tokens, t_mtl *mtl)
