@@ -16,77 +16,51 @@ void	setup_obj_space(t_obj_file *obj_file, char **lines)
 {
 	int i;
 
-	i = 0;
 	obj_file->vertex_count = 0;
-	obj_file->face_count = 0;
-	while (lines[i] != NULL)
-	{
+	obj_file->tex_coord_count = 0;
+	obj_file->normal_count = 0;
+	obj_file->par_vertex_count =0;
+	obj_file->poly_count = 0;
+	i = -1;
+	while (lines[++i] != NULL)
 		if (lines[i][0] == 'v')
 			obj_file->vertex_count++;
+		else if (lines[i][0] == 'v' && lines[i][1] == 't')
+			obj_file->tex_coord_count++;
+		else if (lines[i][0] == 'v' && lines[i][1] == 'n')
+			obj_file->normal_count++;
+		else if (lines[i][0] == 'v' && lines[i][1] == 'p')
+			obj_file->par_vertex_count++;
 		else if (lines[i][0] == 'f')
-			obj_file->face_count++;
-		i++;
-	}
+			obj_file->poly_count++;
 	obj_file->vertices = malloc(sizeof(obj_file->vertex_count));
-	obj_file->faces = malloc(sizeof(obj_file->face_count));
-}
-
-void	parse_vertex_line(t_vec4 *vec, char **tokens)
-{
-	int length;
-
-	length = array_len(tokens);
-	if (length < 3 || length > 4)
-		fatal_error("incorrect vertex data number in object file");
-	vec->x = atof(tokens[1]);
-	vec->y = atof(tokens[2]);
-	vec->z = atof(tokens[3]);
-	if (length == 4)
-		vec->w = atof(tokens[4]);
-	else
-		vec->w = 1.0f;
-}
-
-void	parse_face_line(GLuint **face, char **tokens)
-{
-	int length;
-
-	(void)length;
-	(void)face;
-	(void)tokens;
-/*
-	length = array_len(tokens);
-	if (length < 3 || length > 4)
-		fatal_error("incorrect vertex data number in object file");
-	vec->x = atof(tokens[1]);
-	vec->y = atof(tokens[2]);
-	vec->z = atof(tokens[3]);
-	if (length == 4)
-		vec->w = atof(tokens[4]);
-	else
-		vec->w = 1.0f;
-		*/
+	obj_file->tex_coords = malloc(sizeof(obj_file->tex_coord_count));
+	obj_file->normals = malloc(sizeof(obj_file->normal_count));
+	obj_file->par_vertices = malloc(sizeof(obj_file->par_vertex_count));
+	obj_file->polies = malloc(sizeof(obj_file->poly_count));
 }
 
 void	insert_data(t_obj_file *obj_file, char **lines)
 {
-	int i;
-	int vc;
-	int fc;
+	int i[6];
 	char **tokens;
 
-	i = 0;
-	vc = 0;
-	fc = 0;
-	while (lines[i] != NULL)
+	memset(i, 0, sizeof(int) * 6);
+	while (lines[i[0]] != NULL)
 	{
-		tokens = ft_strsplit(lines[i], ' ');
-		if (lines[i][0] == 'v')
-			parse_vertex_line(&obj_file->vertices[vc++], &tokens[1]);
-		else if (lines[i][0] == 'f')
-			parse_face_line(&obj_file->faces[fc++], &tokens[1]);
+		tokens = ft_strsplit(lines[i[0]], ' ');
+		if (lines[i[0]][0] == 'v')
+			parse_vertex_line(&obj_file->vertices[i[1]++], tokens);
+		else if (lines[i[0]][0] == 'v' && lines[i[0]][1] == 't')
+			parse_param_line(&obj_file->tex_coords[i[2]++], tokens);
+		else if (lines[i[0]][0] == 'v' && lines[i[0]][1] == 'n')
+			parse_normal_line(&obj_file->normals[i[3]++], tokens);
+		else if (lines[i[0]][0] == 'v' && lines[i[0]][1] == 'p')
+			parse_param_line(&obj_file->par_vertices[i[4]++], tokens);
+		else if (lines[i[0]][0] == 'f')
+			parse_face_line(&obj_file->polies[i[5]++], tokens);
 		free_tab(tokens);
-		i++;
+		i[0]++;
 	}
 }
 

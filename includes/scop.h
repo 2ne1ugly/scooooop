@@ -45,6 +45,20 @@ typedef struct	s_cam
 	float	near;
 }				t_cam;
 
+typedef struct	s_line
+{
+	int vertex_count;
+	GLuint	*vertex;
+}				t_line;
+
+typedef struct	s_poly
+{
+	int vertex_count;
+	GLuint	*vertex;
+	GLuint	*tex_coord;
+	GLuint	*normal;
+}				t_poly;
+
 typedef struct	s_obj
 {
 	t_vec4	pos;
@@ -52,10 +66,7 @@ typedef struct	s_obj
 	t_vec4	*vertices;
 	int		vertex_count;
 	GLuint	*indices;
-	int		index_count;
-	t_vec4	*vertex_textures;
-
-
+	int		index_count;	
 	t_mat	world_view_proj;
 }				t_obj;
 
@@ -64,8 +75,15 @@ typedef struct	s_obj_file
 	char	*data;
 	t_vec4	*vertices;
 	int		vertex_count;
-	GLuint	**faces;
-	int		face_count;
+	t_vec4	*tex_coords;
+	int		tex_coord_count;
+	t_vec4	*normals;
+	int		normal_count;
+	t_vec4	*par_vertices;
+	int		par_vertex_count;
+	t_poly	*polies;
+	int		poly_count;
+
 }				t_obj_file;
 
 typedef struct	s_app
@@ -117,3 +135,9 @@ t_mat		mat_mul(t_mat *lhs, t_mat *rhs);
 char		*read_file(char *path);
 void		fatal_error(char *msg);
 void		parse_obj(t_obj_file *obj_file);
+
+void	parse_vertex_line(t_vec4 *vec, char **tokens);
+void	parse_tex_line(t_vec4 *tex, char **tokens);
+void	parse_normal_line(t_vec4 *norm, char **tokens);
+void	parse_par_vert_line(t_vec4 **norm, char **tokens);
+void	parse_face_line(t_poly *poly, char **tokens);
