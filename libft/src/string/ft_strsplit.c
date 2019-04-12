@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strsplit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: awindham <awindham@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/29 13:25:08 by awindham          #+#    #+#             */
-/*   Updated: 2018/12/01 15:39:09 by awindham         ###   ########.fr       */
+/*   Updated: 2019/04/11 13:06:03 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,43 +14,67 @@
 #include <string.h>
 #include <stdlib.h>
 
-static int		wordlen(char const *str, char c)
+static void	alloc_list(const char *s, char c, char ***list)
 {
-	int	i;
-	int	len;
+	int		count;
 
-	i = 0;
-	len = 0;
-	while (str[i] == c)
-		i++;
-	while (str[i] != c && str[i++] != '\0')
-		len++;
-	return (len);
+	count = 0;
+	while (*s != '\0')
+	{
+		while (*s == c && *s != '\0')
+			s++;
+		if (*s != '\0')
+		{
+			count++;
+			while (*s != c && *s != '\0')
+				s++;
+		}
+	}
+	*list = (char **)malloc(sizeof(char *) * (unsigned long)(count + 1));
+	if (*list != NULL)
+		(*list)[count] = NULL;
 }
 
-char			**ft_strsplit(char const *s, char c)
+static int	ft_word_length(const char *s, char c)
 {
-	int		i;
-	int		j;
-	int		k;
-	char	**an_eggy_boy;
+	int count;
 
-	if (s == 0 || (an_eggy_boy = malloc(sizeof(*an_eggy_boy) *
-					(ft_countwords(s, c) + 1))) == 0)
-		return (0);
-	i = -1;
-	j = 0;
-	while (++i < ft_countwords(s, c))
+	count = 0;
+	while (*s != '\0' && *s != c)
 	{
-		k = 0;
-		if ((an_eggy_boy[i] = ft_strnew(wordlen(&s[j], c) + 1)) == 0)
-			an_eggy_boy[i] = 0;
-		while (s[j] == c)
-			j++;
-		while (s[j] != c && s[j])
-			an_eggy_boy[i][k++] = s[j++];
-		an_eggy_boy[i][k] = '\0';
+		count++;
+		s++;
 	}
-	an_eggy_boy[i] = 0;
-	return (an_eggy_boy);
+	return (count);
+}
+
+char		**ft_strsplit(char const *s, char c)
+{
+	char	**list;
+	int		i;
+	int		length;
+
+	alloc_list(s, c, &list);
+	if (list == NULL)
+		return (NULL);
+	i = 0;
+	while (*s != '\0')
+	{
+		while (*s == c && *s != '\0')
+			s++;
+		if (*s == '\0')
+			break ;
+		length = ft_word_length(s, c);
+		list[i] = (char *)malloc(sizeof(char) * (unsigned long)(length + 1));
+		if (list[i] == NULL)
+			return (NULL);
+		ft_strncpy(list[i], s, (unsigned long)length);
+		list[i][length] = '\0';
+		if (strcmp(list[i], "") == 0)
+			printf("%s, %d\n", list[i], i);
+		while (*s != c && *s != '\0')
+			s++;
+		i++;
+	}
+	return (list);
 }

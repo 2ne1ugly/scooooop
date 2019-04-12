@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 14:28:08 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/07 12:09:00 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/11 12:55:32 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ char	*read_file(char *path)
 	char		*buffer;
 	FILE		*fd;
 
-	stat(path, &buf);
+	if (stat(path, &buf) == -1)
+		fatal_error("stat failed");
 	buffer = malloc(sizeof(char) * (buf.st_size + 1));
 	fd = fopen(path, "r");
 	fread(buffer, 1, buf.st_size, fd);

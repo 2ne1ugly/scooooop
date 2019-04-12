@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mtl_file.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mchi <chi@student.42.fr>                   +#+  +:+       +#+        */
+/*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 18:20:09 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/10 18:20:09 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/11 16:29:17 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,13 @@ void	init_mtl(t_mtl *mtl, char *name)
 
 void	fill_mtl(t_mtl *mtls, char **lines)
 {
-	int i;
-	int mtl_idx;
-	char **tokens;
+	int		i;
+	int		mtl_idx;
+	char	**tokens;
 
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-
-	i = 0;
+	i = -1;
 	mtl_idx = -1;
-	while (lines[i] != NULL)
+	while (lines[++i] != NULL)
 	{
 		tokens = ft_strsplit(lines[i], ' ');
 		if (strcmp(tokens[0], "newmtl") == 0)
@@ -49,23 +42,30 @@ illum 2
 			parse_3val_line(&mtls[mtl_idx].diffuse, &tokens[1]);
 		else if (strcmp(tokens[0], "Ks") == 0)
 			parse_3val_line(&mtls[mtl_idx].specular, &tokens[1]);
+		else if (strcmp(tokens[0], "Ns") == 0)
+			parse_1val_float_line(&mtls[mtl_idx].spec_exp, &tokens[1]);
+		else if (strcmp(tokens[0], "d") == 0)
+			parse_1val_float_line(&mtls[mtl_idx].spec_exp, &tokens[1]);
+		else if (strcmp(tokens[0], "Tr") == 0)
+			parse_tr_line(&mtls[mtl_idx].spec_exp, &tokens[1]);
+		else if (strcmp(tokens[0], "illum") == 0)
+			parse_1val_int_line(&mtls[mtl_idx].illum_model, &tokens[1]);
 		free_tab(tokens);
-		i++;
 	}
 }
 
-void	add_mtl(t_mtl_file *mtl, char *line, char *curr_path)
+void	add_mtl(t_mtl_file *mtl, char *line)
 {
-	int i;
-	char **lines;
-	char **tokens;
+	int		i;
+	char	**lines;
+	char	**tokens;
 
 	i = 0;
 	while (!isspace(line[i]))
 		i++;
 	while (isspace(line[i]))
 		i++;
-	mtl->path = strcat(curr_path, &line[i]);
+	mtl->path = ft_strjoin("resources/", &line[i]);
 	mtl->data = read_file(mtl->path);
 	lines = ft_strsplit(mtl->data, '\n');
 	mtl->mtl_count = 0;

@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 13:35:06 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/10 13:39:05 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/11 19:08:10 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,6 @@ typedef struct	s_cam
 	float	near;
 }				t_cam;
 
-typedef struct	s_line
-{
-	int			vertex_count;
-	int			*vertex;
-	t_mtl		*material;
-}				t_line;
-
-typedef struct	s_poly
-{
-	int		vertex_count;
-	int		*vertex;
-	int		*tex_coord;
-	int		*normal;
-	t_mtl	*material;
-}				t_poly;
-
 typedef struct	s_obj
 {
 	t_vec4	pos;
@@ -69,7 +53,7 @@ typedef struct	s_obj
 	t_vec4	*vertices;
 	int		vertex_count;
 	GLuint	*indices;
-	int		index_count;	
+	int		index_count;
 	t_mat	world_view_proj;
 }				t_obj;
 
@@ -91,6 +75,22 @@ typedef struct	s_mtl_file
 	t_mtl	*mtls;
 	int		mtl_count;
 }				t_mtl_file;
+
+typedef struct	s_line
+{
+	int			vertex_count;
+	int			*vertex;
+	t_mtl		*material;
+}				t_line;
+
+typedef struct	s_poly
+{
+	int		vertex_count;
+	int		*vertex;
+	int		*tex_coord;
+	int		*normal;
+	t_mtl	*material;
+}				t_poly;
 
 typedef struct	s_obj_file
 {
@@ -130,6 +130,12 @@ typedef struct	s_app
 	int		update;
 }				t_app;
 
+void GLAPIENTRY MessageCallback( GLenum source, GLenum type, GLuint id,
+	GLenum severity, GLsizei length,
+	const GLchar* message, const void* userParam);
+
+void		check_gl_error(void);
+
 t_app		*init_app(void);
 void		init_wnd(t_app *app, int width, int height, char *title);
 void		init_glew(void);
@@ -163,7 +169,7 @@ char		*read_file(char *path);
 void		fatal_error(char *msg);
 void		parse_obj(t_obj_file *obj_file);
 
-void		add_mtl(t_mtl_file *mtl, char *line, char *curr_path);
+void		add_mtl(t_mtl_file *mtl, char *line);
 void		apply_mtl(t_obj_file *obj, char **tokens);
 
 void		parse_vertex_line(t_vec4 *vec, char **tokens);
@@ -172,5 +178,9 @@ void		parse_normal_line(t_vec4 *norm, char **tokens);
 void		parse_par_vert_line(t_vec4 **norm, char **tokens);
 void		parse_face_line(t_poly *poly, char **tokens, t_mtl *mtl);
 void		parse_line_line(t_line *line, char **tokens, t_mtl *mtl);
+void		parse_param_line(t_vec4 *tex, char **tokens);
 
 void		parse_3val_line(t_vec4 *val, char **tokens);
+void		parse_1val_int_line(int *val, char **tokens);
+void		parse_1val_float_line(float *val, char **tokens);
+void		parse_tr_line(float *val, char **tokens);

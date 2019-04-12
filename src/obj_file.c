@@ -17,6 +17,7 @@ void		increase_count(t_obj_file *obj, char *head)
 	if (head[0] != '#' && strcmp(head, "") != 0 &&
 		strcmp(head, "usemtl") != 0 && strcmp(head, "o") != 0 &&
 		strcmp(head, "g") != 0 && strcmp(head, "s") != 0)
+	{
 		if (strcmp(head, "v") == 0)
 			obj->vertex_count++;
 		else if (strcmp(head, "vt") == 0)
@@ -33,6 +34,7 @@ void		increase_count(t_obj_file *obj, char *head)
 			obj->mtl_file_count++;
 		else
 			fatal_error("invalid/non-parsable obj");
+	}
 }
 
 void	count_obj_data(t_obj_file *obj, char **lines)
@@ -44,7 +46,7 @@ void	count_obj_data(t_obj_file *obj, char **lines)
 	obj->vertex_count = 0;
 	obj->tex_coord_count = 0;
 	obj->normal_count = 0;
-	obj->par_vertex_count =0;
+	obj->par_vertex_count = 0;
 	obj->poly_count = 0;
 	obj->line_count = 0;
 	obj->mtl_file_count = 0;
@@ -54,13 +56,13 @@ void	count_obj_data(t_obj_file *obj, char **lines)
 		increase_count(obj, tokens[0]);
 		free_tab(tokens);
 	}
-	obj->vertices = malloc(sizeof(obj->vertex_count));
-	obj->tex_coords = malloc(sizeof(obj->tex_coord_count));
-	obj->normals = malloc(sizeof(obj->normal_count));
-	obj->par_vertices = malloc(sizeof(obj->par_vertex_count));
-	obj->polies = malloc(sizeof(obj->poly_count));
-	obj->lines = malloc(sizeof(obj->line_count));
-	obj->mtl_files = malloc(sizeof(obj->mtl_file_count));
+	obj->vertices = malloc(sizeof(t_vec4) * obj->vertex_count);
+	obj->tex_coords = malloc(sizeof(t_vec4) * obj->tex_coord_count);
+	obj->normals = malloc(sizeof(t_vec4) * obj->normal_count);
+	obj->par_vertices = malloc(sizeof(t_vec4) * obj->par_vertex_count);
+	obj->polies = malloc(sizeof(t_poly) * obj->poly_count);
+	obj->lines = malloc(sizeof(t_line) * obj->line_count);
+	obj->mtl_files = malloc(sizeof(t_mtl_file) * obj->mtl_file_count);
 }
 
 void	insert_data(t_obj_file *obj, char **lines)
@@ -85,7 +87,7 @@ void	insert_data(t_obj_file *obj, char **lines)
 		else if (strcmp(tokens[0], "l") == 0)
 			parse_line_line(&obj->lines[i[6]++], &tokens[1], obj->curr_mtl);
 		else if (strcmp(tokens[0], "mtllib") == 0)
-			add_mtl(obj->mtl_files[i[7]++], &lines[i[0]], obj->path);
+			add_mtl(&obj->mtl_files[i[7]++], lines[i[0]]);
 		else if (strcmp(tokens[0], "usemtl") == 0)
 			apply_mtl(obj, &tokens[1]);
 		free_tab(tokens);
@@ -100,7 +102,7 @@ void	parse_obj(t_obj_file *obj)
 	lines = ft_strsplit(obj->data, '\n');
 	count_obj_data(obj, lines);
 	obj->curr_mtl = NULL;
-	memset(obj->mtl_files, 0, sizeof(t_mtl *) * 8);
+	memset(obj->mtl_files, 0, sizeof(t_mtl_file *) * obj->mtl_file_count);
 	insert_data(obj, lines);
 	free_tab(lines);
 }

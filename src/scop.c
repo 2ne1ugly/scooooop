@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/05 22:37:54 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/10 13:40:16 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/11 19:11:29 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,19 @@ void	fatal_error(char *msg)
 {
 	printf("%s\n", msg);
 	exit(0);
+}
+
+void GLAPIENTRY MessageCallback( GLenum source, GLenum type, GLuint id,
+	GLenum severity, GLsizei length,
+	const GLchar* message, const void* userParam)
+{
+	(void)source;
+	(void)id;
+	(void)length;
+	(void)userParam;
+	fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+		( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+		type, severity, message );
 }
 
 int	main(int argc, char **argv)

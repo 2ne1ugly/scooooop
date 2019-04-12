@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 18:56:10 by mchi              #+#    #+#             */
-/*   Updated: 2019/04/09 05:49:42 by mchi             ###   ########.fr       */
+/*   Updated: 2019/04/11 16:01:01 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	key_press(int keycode, void *param)
 		cos(app->cam.ypr.y), cos(app->cam.ypr.x) * sin(app->cam.ypr.y), 0};
 	dir_foward = (t_vec4){sin(app->cam.ypr.x) * cos(app->cam.ypr.y),
 		- sin(app->cam.ypr.y), cos(app->cam.ypr.y) * cos(app->cam.ypr.x), 0};
-
 
 	if (keycode == 126)
 		app->cam.ypr.y -= 0.05;
