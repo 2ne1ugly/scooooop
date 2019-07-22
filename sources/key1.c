@@ -1,25 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vec.c                                              :+:      :+:    :+:   */
+/*   key1.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/19 10:19:13 by mchi              #+#    #+#             */
-/*   Updated: 2019/07/19 10:20:47 by mchi             ###   ########.fr       */
+/*   Created: 2019/07/20 10:18:40 by mchi              #+#    #+#             */
+/*   Updated: 2019/07/20 13:44:13 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "scop.h"
 
-void	zero_vec(GLfloat *v, int size)
+void	key_left(t_app *app)
 {
-	int	i;
+	app->cam.ypr[0] += -0.1;
+}
 
-	i = 0;
-	while (i < size)
-	{
-		v[i] = 0;
-		i++;
-	}
+void	key_right(t_app *app)
+{
+	app->cam.ypr[0] += 0.1;
+}
+
+void	key_up(t_app *app)
+{
+	app->cam.ypr[1] += -0.1;
+}
+
+void	key_down(t_app *app)
+{
+	app->cam.ypr[1] += 0.1;
 }

@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 15:16:53 by mchi              #+#    #+#             */
-/*   Updated: 2019/07/18 13:02:48 by mchi             ###   ########.fr       */
+/*   Updated: 2019/07/20 10:44:21 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ char		*read_file(const char *path, long *length)
 	fseek(f, 0, SEEK_END);
 	len = ftell(f);
 	fseek(f, 0, SEEK_SET);
-	data = malloc(len + 1);
+	data = malloc((unsigned long)(len + 1));
 	if (!data)
 		fatal("malloc fail");
-	fread(data, 1, len, f);
+	fread(data, 1, (size_t)len, f);
 	data[len] = '\0';
 	fclose(f);
 	if (length)

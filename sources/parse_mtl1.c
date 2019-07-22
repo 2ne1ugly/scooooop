@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 13:12:00 by mchi              #+#    #+#             */
-/*   Updated: 2019/07/19 11:26:38 by mchi             ###   ########.fr       */
+/*   Updated: 2019/07/21 11:04:19 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,32 +19,30 @@ void	parse_newmtl(t_obj *obj, char *args, t_mtl *context)
 	if (!args)
 		fatal("invalid obj");
 	init_default_mtl(context);
-	if (sscanf(args, "%s", context->name) < 1)
-		fatal("invalid obj");
+	strcpy(context->name, assert_parse(&args, " "));
 }
 
-void	parse_Ns(t_mtl *mtl, char *args)
+void	parse_ns(t_mtl *mtl, char *args)
 {
 	if (!args || !*mtl->name)
 		fatal("invalid obj");
-	if (sscanf(args, "%f", &mtl->exp) < 1)
-		fatal("invalid obj");
+	mtl->exp = atoi(assert_parse(&args, " "));
 }
 
-void	parse_Ka(t_mtl *mtl, char *args)
+void	parse_ka(t_mtl *mtl, char *args)
 {
 	if (!args || !*mtl->name)
 		fatal("invalid obj");
-	if (sscanf(args, "%f %f %f", 
+	if (sscanf(args, "%f %f %f",
 		&mtl->amb[0], &mtl->amb[1], &mtl->amb[2]) < 3)
 		fatal("invalid obj");
 }
 
-void	parse_Kd(t_mtl *mtl, char *args)
+void	parse_kd(t_mtl *mtl, char *args)
 {
 	if (!args || !*mtl->name)
 		fatal("invalid obj");
-	if (sscanf(args, "%f %f %f", 
+	if (sscanf(args, "%f %f %f",
 		&mtl->dif[0], &mtl->dif[1], &mtl->dif[2]) < 3)
 		fatal("invalid obj");
 }

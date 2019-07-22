@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 17:38:41 by mchi              #+#    #+#             */
-/*   Updated: 2019/07/17 22:07:46 by mchi             ###   ########.fr       */
+/*   Updated: 2019/07/20 10:43:44 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	print_log(GLuint to, GLint log_length,
 
 	if (log_length > 0)
 	{
-		log = malloc(log_length);
+		log = malloc((unsigned long)log_length);
 		if (!log)
 			fatal("malloc failed");
 		(*f)(to, log_length, NULL, log);
@@ -69,4 +69,5 @@ void	load_program(t_app *app)
 	glDetachShader(app->prog, fs);
 	glDeleteShader(vs);
 	glDeleteShader(fs);
+	glUseProgram(app->prog);
 }

@@ -6,7 +6,7 @@
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/17 15:20:48 by mchi              #+#    #+#             */
-/*   Updated: 2019/07/19 10:48:38 by mchi             ###   ########.fr       */
+/*   Updated: 2019/07/21 16:40:03 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,15 @@ void	init_resources(t_app *app, int argc, char **argv)
 	init_buffers(&app->obj);
 	init_cam(&app->cam);
 	load_program(app);
+	set_default_mtl(&app->obj);
 	if (argc == 1)
 		load_obj(&app->obj, "resources/teapot.obj");
 	else
 		load_obj(&app->obj, argv[1]);
-	set_mtl_uniform(app, &app->obj);
+	set_buffers(&app->obj);
+	find_uniform_loc(app);
+	load_texture(app);
+	set_mtl_uniform(app, app->obj.curr_mtl);
 }
 
 void	init_glfw(t_app *app)

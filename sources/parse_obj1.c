@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_obj.c                                        :+:      :+:    :+:   */
+/*   parse_obj1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mchi <mchi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/18 12:37:39 by mchi              #+#    #+#             */
-/*   Updated: 2019/07/19 11:31:13 by mchi             ###   ########.fr       */
+/*   Updated: 2019/07/21 10:58:51 by mchi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,40 @@
 
 void	parse_v(t_obj *obj, char *args)
 {
-	t_vtx	elem;
+	t_vec3	pos;
 
 	if (!args)
 		fatal("invalid obj");
-	zero_vec(elem->norm, 3);
-	if (sscanf(args, "%f %f %f", &elem.pos[0], &elem.pos[1], &elem.pos[2]) < 3)
-		fatal("invalid obj");
-	push_back_cxxvec(obj->vtx_vec, &elem);
+	pos[0] = atof(assert_parse(&args, " "));
+	pos[1] = atof(assert_parse(&args, " "));
+	pos[2] = atof(assert_parse(&args, " "));
+	push_back_cxxvec(obj->pos_vec, pos);
 }
 
 void	parse_f(t_obj *obj, char *args)
 {
-	unsigned long	indices[3];
+	unsigned	idx;
+	t_cxxvec	*poly;
+	char		*token;
 
 	if (!args)
 		fatal("invalid obj");
-	if (sscanf(args, "%lu %lu %lu", &indices[0], &indices[1], &indices[2]) < 3)
-		fatal("invalid obj");
-	push_back_cxxvec(obj->idx_vec, &indices[0]);
-	push_back_cxxvec(obj->idx_vec, &indices[1]);
-	push_back_cxxvec(obj->idx_vec, &indices[2]);
+	poly = create_cxxvec(sizeof(unsigned));
+	if (!poly)
+		fatal("malloc fail");
+	idx = atoi(assert_parse(&args, " "));
+	push_back_cxxvec(poly, &idx);
+	idx = atoi(assert_parse(&args, " "));
+	push_back_cxxvec(poly, &idx);
+	idx = atoi(assert_parse(&args, " "));
+	push_back_cxxvec(poly, &idx);
+	while ((token = strsep(&args, " ")))
+	{
+		idx = atoi(token);
+		push_back_cxxvec(poly, &idx);
+	}
+	push_back_cxxvec(obj->poly_vec, poly);
+	free(poly);
 }
 
 /*
@@ -54,15 +67,13 @@ void	parse_mtllib(t_obj *obj, char *args, char *dir)
 
 	if (!args)
 		fatal("invalid obj");
-	name = NULL;
-	if (sscanf(args, "%s", name) < 1)
-		fatal("invalid obj");
-	path = malloc(strlen(dir) + strlen(name) + 1);
+	name = assert_parse(&args, " ");
+	path = malloc(strlen(dir) + strlen(name) + 5);
 	*path = '\0';
 	strcat(path, dir);
 	strcat(path, "/");
 	strcat(path, name);
-	load_mtl(app, path);
+	load_mtl(obj, path);
 	free(path);
 }
 
@@ -70,24 +81,22 @@ void	parse_mtllib(t_obj *obj, char *args, char *dir)
 **	only one mtl for object
 */
 
-void	parse_usemtl(t_app *app, char *args)
+void	parse_usemtl(t_obj *obj, char *args)
 {
 	char	*name;
 	t_mtl	*mtl;
-	size_t		i;
+	size_t	i;
 
 	if (!args)
 		fatal("invalid obj");
-	name = NULL;
-	if (sscanf(args, "%s", name) < 1)
-		fatal("invalid obj");
+	name = assert_parse(&args, " ");
 	i = 0;
-	while (i < app->mtl_vec->size)
+	while (i < obj->mtl_vec->size)
 	{
-		mtl = index_cxxvec(app->mtl_vec, i);
+		mtl = index_cxxvec(obj->mtl_vec, i);
 		if (strcmp(name, mtl->name) == 0)
 		{
-			app->curr_mtl = mtl;
+			obj->curr_mtl = mtl;
 			return ;
 		}
 		i++;
