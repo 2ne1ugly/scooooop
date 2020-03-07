@@ -9,8 +9,7 @@ To toggle object translate/rotate mode: ```r```
 To apply cropster: ```1```
 
 ## What is a cropster?
-just a hamster texture  
-[](resources/cropster.tga)
+just a .tga hamster texture (check resource folder)
 
 ## Screenshots
 Teapot  
